@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+   <div class="container mt-5 text-center">
+      <h1>Cette page n'existe plus</h1>
+      <p class="">On a mal du trouver cette page la, nous pensons qu'en existe pas</p>
+      <a href="{{ path('homepage') }}" class="btn btn-primary">Page d'accueil</a>
+      <a href="{{ path('ad_index') }}" class="btn btn-secondary">Nos annonces</a>
+   </div>
+{% endblock %}

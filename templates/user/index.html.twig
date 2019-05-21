@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% set name = user.fullName %}
+
+{% block title %}
+   Bonjour {{ name }}, c'est votre profil
+{% endblock %}
+
+{% block body %}
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-md-3">
+            <div class="profile-info text-center">
+               <h3 class="ml-2">{{ name }}</h3>
+               <img class="avatar-mini" src="{{ user.picture }}" alt="Le profil de {{ name }}" title="">
+               <br>
+               <span class="badge badge-primary">
+                     {% if user.ads | length == 1 %}
+                        <strong>une</strong> annonce
+                     {% elseif user.ads | length > 1 %}
+                        <strong>{{ user.ads | length }}</strong> annonces
+                     {% else %}
+                        <strong>Pas d'annonces</strong>
+                     {% endif %}
+               </span>
+            </div>
+         </div>
+         <div class="col-md-9">
+            <div class="profile-description">
+               <p>{{ user.description | raw }}</p>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         {% if user.ads | length > 0 %}
+            {% for ad in user.ads %}
+               {% include 'ad/_ad.html.twig' %}
+            {% endfor %}
+         {% else %}
+            <div class="alert alert-warning"><strong>{{ name }}</strong> n'a pas encore d'annonce</div>
+         {% endif %}
+      </div>
+   </div>
+{% endblock %}

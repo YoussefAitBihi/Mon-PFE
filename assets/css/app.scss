@@ -1,0 +1,66 @@
+@import url('./bootstrap.min.css');
+
+/* Start Our FrameWork */
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+footer {
+   padding: 20px 0;
+   border-top: 1px solid #DDD; 
+   border-bottom: 1px solid #DDD; 
+}
+
+.container-fluid, .container {
+   margin-top: 20px;
+}
+
+.navbar {
+   height: 60px;
+}
+
+a, a:hover, a:focus, a:active {
+   text-decoration: none;
+}
+
+.btn {
+   border-radius: 2rem;
+}
+
+.table > tbody > tr > td, 
+.table > thead > tr > th {
+   vertical-align: middle;
+}
+/* Start Annonce */
+.ad-he {
+   padding: 2rem;
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center center;
+   color: #FFF;
+   text-shadow: 3px 3px 3px rgba(0, 0, 0, .5);
+}
+
+.avatar {
+   max-width: 50px;
+   max-height: 50px;
+   border-radius: 50%;
+}
+
+.avatar-mini {
+   width: 132px;
+   height: 132px;
+   border-radius: 50%;
+}
+
+/* Les dates qui sont indisponibles */
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
+   color: #b22222 !important;
+}
+
+/* Rating */
+.rating > i {
+   color: #F4C150;
+}

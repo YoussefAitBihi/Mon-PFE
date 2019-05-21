@@ -1,0 +1,28 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+   Modification de commentaire n°{{comment.id}}
+{% endblock %}
+
+{% block body %}
+   <div class="container">
+      <div class="row justify-content-center">
+         <div class="col-6 align-items-center">
+            <div class="card mt-5">
+               <div class="card-header bg-light">
+                  <h4 class="card-title">Corriger le commentaire</h4>
+               </div>
+               <div class="card-body">
+                  {{ form_start(form) }}
+                     {{ form_widget(form) }}
+                     <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i>
+                        Enregistrer la modification
+                     </button>
+                  {{ form_end(form) }}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}

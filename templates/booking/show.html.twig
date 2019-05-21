@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation n°{{ booking.id }}{% endblock %}
+
+{% block body %}
+{% set booker = booking.booker.fullName %}
+   <div class="container">
+      <h4>Bravo monsieur : {{ booker }}</h4>
+      <div class="row">
+         <div class="col">
+            <h4>Tous les détails</h4>
+            <dl class="row">
+               <dt class="col-md-4">Numéro de réservation : </dt>
+               <dd class="col-md-8">{{ booking.id }}</dd>
+               <dt class="col-md-4">Titre d'annonce : </dt>
+               <dd class="col-md-8">{{ booking.bookerAd.title }}</dd>
+               <dt class="col-md-4">La date d'arrivée : </dt>
+               <dd class="col-md-8">{{ booking.startDate | date('d/m/Y') }}</dd>
+               <dt class="col-md-4">La date de départ : </dt>
+               <dd class="col-md-8">{{ booking.endDate | date('d/m/Y') }}</dd>
+               <dt class="col-md-4">Nombre de jour(s)</dt>
+               <dd class="col-md-8">{{ booking.days }}</dd>
+               <dt class="col-md-4">Le cout : </dt>
+               <dd class="col-md-8">{{ booking.amount }}$</dd>
+               <dt class="col-md-4">Votre commentaire : </dt>
+               <dd class="col-md-8">{{ booking.comment }}</dd>
+            </dl>
+         </div>
+         <div class="col">
+            <h4>Votre hôte : details</h4>
+            <div class="info-heading">
+               <img src="{{ booking.bookerAd.author.picture }}" alt="{{ booking.bookerAd.author.fullName }}" class="float-left avatar mr-3">
+               <h6>{{ booking.bookerAd.author.fullName }}</h6>
+            </div>
+            <span class="badge badge-primary">{{ booking.bookerAd.author.ads | length }}annonce(s)</span><br>
+            <a href="{{ path('user_show_ads', {'slug': booking.bookerAd.author.slug}) }}" class="btn btn-primary mt-3">Voir plus d'infos</a>
+            {# Plus des utilisateurs ayant des annonces #}
+            
+         </div>
+      </div>
+      <hr>
+      {# Add rating and comment  #}
+      {% set allComment = booking.BookerAd.allComment(app.user) %}
+      {% if date() >= date(booking.endDate) and allComment is null %}
+      <div class="bg-light px-3 py-3 mt-3">
+         <h3 class="mb-3">Votre commentaire</h3>
+         {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">Je commente</button>
+         {{ form_end(form) }}
+      </div>
+      {% else %}
+         <div class="alert alert-info">Vous ne pourriez malheureusement pas faire un commentaire ou bien une note, Il vous faut finir votre voyage :), ou vous avez déjà fait un commentaire</div>
+      {% endif %}
+      <hr>
+      <div class="hebergement">
+         <h3>Votre hébergement</h3>
+         <h5>{{ booking.bookerAd.title }}</h5>
+         <img style="display: block;" src="{{ booking.bookerAd.coverImage }}" alt="{{ booking.bookerAd.author.fullName }}" title="L'annonce de : {{ booking.bookerAd.author.fullName }}">
+         <p>{{ booking.bookerAd.content | raw }}</p>
+      </div>
+   </div>
+{% endblock %}

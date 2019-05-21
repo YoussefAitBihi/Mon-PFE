@@ -1,0 +1,67 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+   Administration des commentaires
+{% endblock %}
+
+{% block body %}
+   <div class="container-fluid">
+      <h1 class="my-4">Gestion des commentaires</h1>
+      <div class="table-responsive">
+         <table class="table table-bordered table-hover">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>L'auteur</th>
+                  <th>Le commentaire</th>
+                  <th>La date de création</th>
+                  <th>La note</th>
+                  <th>L'annonce qui a commentée</th>
+                  <th>Action</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% if comments | length > 0 %}
+                  {% for comment in comments %}
+                     <tr>
+                        <td>{{comment.id}}</td>
+                        <td>
+                           <a href="{{ path('user', {'slug': comment.author.slug}) }}">
+                              <img src="{{comment.author.picture}}" alt="" class="avatar mr-2">
+                              {{comment.author.fullName}}
+                           </a>
+                        </td>
+                        <td>
+                           <blockquote>
+                              <q><em>{{comment.comment}}</em></q>
+                           </blockquote>
+                        </td>
+                        <td>{{comment.createdAt | date('d/m/Y H:i')}}</td>
+                        <td>
+                           <span class="badge badge-primary">
+                              {% if comment.rating == 1 %}
+                                 {{comment.rating}} note
+                              {% else %}
+                                 {{comment.rating}} notes
+                              {% endif %}
+                           </span>
+                        </td>
+                        <td>{{comment.ad.title}}</td>
+                        <td>
+                           <a href="{{ path('admin_comment_edit', {'id': comment.id}) }}" class="btn btn-primary">
+                              <i class="fas fa-pen"></i>
+                           </a>
+                           <a href="{{ path('admin_comment_remove', {'id': comment.id}) }}" class="btn btn-danger my-1" onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')">
+                              <i class="fas fa-trash"></i>
+                           </a>
+                        </td>
+                     </tr>
+                  {% endfor %}
+               {% endif %}
+            </tbody>
+         </table>
+      </div>
+      {# System pagination #}
+      {% include 'admin/partials/pagination.html.twig' with {'route': 'admin_comment_index'} %}
+   </div>
+{% endblock %}

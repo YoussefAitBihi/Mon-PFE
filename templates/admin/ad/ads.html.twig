@@ -1,0 +1,47 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Administration des annonces{% endblock %}
+
+{% block body %}
+   <h1 class="text-center my-4">Gestion des annonces</h1>
+   {# All Ads #}
+   <div class="table-responsive container-fluid">
+      <table class="table table-bordered table-hover">
+         <thead>
+            <tr class="text-center">
+               <th>ID</th>
+               <th>Le titre d'annonce</th>
+               <th>L'auteur</th>
+               <th>Réservations</th>
+               <th>Note</th>
+               <th>Action</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for ad in ads %}
+               {% set author = ad.author %}
+               <tr>
+                  <td>{{ad.id}}</td>
+                  <td>{{ad.title}}</td>
+                  <td>
+                     <a href="{{ path('user', {'slug': author.slug}) }}">
+                        <img src="{{author.picture}}" alt="Annonce de {{author.fullName}}" class="avatar mr-2">
+                        {{ author.fullName}}
+                     </a>
+                  </td>
+                  <td class="text-center"><strong>{{ad.bookings | length}}</strong> fois</td>
+                  <td class="text-center">
+                     <span class="rating">
+                        {% include 'partials/rating.html.twig' with {'rating': ad.ratings} %}
+                     </span>
+                  </td>
+                  <td class="text-center">
+                     <a href="{{ path('admin_ads_edit', {'id': ad.id, 'slug': ad.slug}) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                     <a onclick="return confirm('Voulez-vous vraiment supprimer cette annonce ?')" href="{{ path('admin_ads_remove', {'id': ad.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                  </td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+{% endblock %}

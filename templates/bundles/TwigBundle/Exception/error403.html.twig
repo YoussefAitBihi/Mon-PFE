@@ -1,0 +1,12 @@
+{# templates/bundles/TwigBundle/Exception/error403.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Problème d'accès{% endblock %}
+
+{% block body %}
+   <div class="container mt-5 text-center">
+      <h1>Vous essaysez de bousiller le site!<br>vous ne pouvez plus</h1>
+      <p class="">Vous n'avez pas le droit d'accéder à cette ressource</p>
+      <a href="{{ path('homepage') }}" class="btn btn-primary">Page d'accueil</a>
+   </div>
+{% endblock %}

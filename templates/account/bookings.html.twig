@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% set user = app.user %}
+
+{% block title %}
+   Monsieur {{ user.fullName }}, c'est vos annonces
+{% endblock %}
+
+{% block body %}
+   <div class="container">
+      <h1 class="text-center">Mes réservations</h1>
+      <div class="alert alert-info">
+         <p>Retrouver ci-dessous vos réservations plus détaillées</p>
+      </div>
+      {# Toutes les réservations #}
+      {% if user.bookings is empty %}
+         <div class="alert alert-warning">
+            Vous n'avez pas des réservations, Réservez dès maintenant.
+            <a href="{{ path('ad_index') }}">Nos annonces</a>
+         </div>    
+      {% else %}
+         {% for booking in user.bookings %}
+            <div class="row mb-4">
+               <div class="col-sm-12 col-md-4">
+                  <img src="{{ booking.BookerAd.coverImage }}" alt="Annonce de {{ booking.BookerAd.author.fullName }}" class="img-fluid">
+                  {# Rating #}
+                  {% set comment = booking.BookerAd.allComment(user) %}
+                  {% if comment is not null %}
+                     <span class="rating">
+                        {% include 'partials/rating.html.twig' with {'rating': comment.rating} %} <strong>{{ comment.rating }} note(s)</strong>
+                     </span>
+                  {% else %}
+                     <div class="alert alert-info">Vous n'avez pas de note. Donnez-nous votre avis en cliquant <a href="{{ path('booking_show', {'id': booking.id}) }}">ici.</a></div>
+                  {% endif %}
+               </div>
+               <div class="col-sm-12 col-md-8">
+                  <h6>{{ booking.BookerAd.title }}</h6>
+                  <p>
+                     Du 
+                     <strong>{{ booking.startDate | date('d/m/Y') }}</strong> 
+                     au 
+                     <strong>{{ booking.endDate | date('d/m/Y') }}</strong>
+                     <p><strong>{{ booking.getDays() }}</strong> Jour(s)</p>
+                     <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary">Plus d'infos</a>
+                  </p>
+               </div>
+            </div>
+         {% endfor %}
+      {% endif %}
+   </div>
+{% endblock %}

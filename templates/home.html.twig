@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+   Bienvenue sur le meilleure endroit de location des appartements !
+{% endblock %}
+{% block body %}
+{# Start Welcome #}
+<div class="jumbotron mt-3">
+   <div class="container">
+      <h1 class="display-3">Bienvenue sur notre site SymBNB</h1>
+      <p class="lead">Nous mettons en place des opportunités pour les gens qui veulent à voyager en gagnant de temps et en gagnant d'argent !</p>
+      <hr class="my-4">
+      <p>Vous êtes un voyageur eh bien vous êtes au bon endroit !</p>
+      <p class="lead">
+         <a class="btn btn-primary btn-lg" href="#" role="button">Voir plus !</a>
+      </p>
+   </div>
+</div>
+{# End Welcome #}
+
+{# Start Cards Appartement #}
+<div class="container">
+   <h2 class="mb-4 mt-5">Nos appartements à louer</h2>
+   <div class="row">
+      {% for dataAd in ads %}
+         {% include 'ad/_ad.html.twig' with {'ad': dataAd.annonce} %}
+      {% endfor %}
+   </div>
+   <hr class="my-4">
+</div>
+{# End Cards Appartement #}
+
+{# Start Cards Propriétaires #}
+<div class="container">
+   <h2 class="mb-4 mt-5">Nos propriétaires starts</h2>
+   <div class="row">
+      {% for user in users %}
+         <div class="col-md-6">
+            <div class="card mb-3">
+               <div class="card-body">
+                  <div class="card-title">
+                     <h4>{{user.user.lastName | upper}}</h4>
+                  </div>
+                  <hr class="my-3">
+                  <img class="float-left mr-3" src="{{ user.user.picture }}" alt="Avatar de {{user.user.firstName}}">
+                  <p class="card-text">
+                     {{user.user.description | raw}}
+                  </p>
+                  <a href="#" class="btn btn-success float-right">Voir plus !</a>
+               </div>
+            </div>
+         </div>
+      {% endfor %}
+   </div>
+</div>
+{# End Cards Propriétaires #}
+
+{% endblock %}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>SymBNB - {% block title %}Bienvenue{% endblock %}</title>
+      <!-- <link rel="stylesheet" href="/css/bootstrap.min.css"> -->
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+      <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+      {% block stylesheets %}{% endblock %}
+   </head>
+   <body>
+      {# Start NavBar #}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <a class="navbar-brand" href="{{ path('homepage') }}">SymBNB</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+               <li class="nav-item {% if app.request.get('_route') == 'homepage' %}active{% endif %}">
+                  <a class="nav-link" href="{{ path('homepage') }}">Accueil<span class="sr-only">(current)</span></a>
+               </li>
+               <li class="nav-item {% if app.request.get('_route') == 'ad_index' %}active{% endif %}">
+                  <a href="{{ path('ad_index') }}" class="nav-link">Nos annonces</a>
+               </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+               {% if app.user %}
+                  <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="avatar mr-3" src="{{ app.user.picture }}" alt="Photo de {{ app.user.fullName }}" title="{{ app.user.fullName }}">{{ app.user.fullName }}
+                     </a>
+                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a href="{{ path('ad_new') }}" class="dropdown-item">Nouvelle annonce</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('account_index') }}">Mon profil</a>
+                        <a href="{{ path('user_show_ads', {'slug': app.user.slug}) }}" class="dropdown-item">Mes annonces</a>
+                        <a href="{{ path('account_bookings') }}" class="dropdown-item">Mes réservations</a>
+                        <a class="dropdown-item" href="{{ path('account_profile', {'slug': app.user.slug}) }}">Modifier mon compte</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('account_logout') }}">Déconnexion</a>
+                     </div>
+                  </li>
+               {% else %}
+                  <li class="nav-item">
+                     <a href="{{ path('account_register') }}" class="nav-link">S'inscrire</a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{{ path('account_login') }}" class="nav-link">Se connecter</a>
+                  </li>
+               {% endif %}
+            </ul>
+         </div>
+      </nav>
+      {# Si est bien effectutée #}
+      <div class="container">
+         {% for label, messages in app.flashes %}
+            <div class="alert alert-{{ label }}">
+               {% for message in messages %}
+                  <p>{{ message }}</p>
+               {% endfor %}
+            </div>
+         {% endfor %}
+      </div>
+
+      {% block body %}{% endblock %}
+      <script src="{{ asset('/build/js/app.js') }}"></script>
+      {% block javascripts %}{% endblock %}
+   </body>
+</html>

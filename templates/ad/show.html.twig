@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   {{ ad.title }}
+{% endblock %}
+
+{% block body %}
+   {# Start Header #}
+   {% set url = ad.coverImage %}
+   <header class="ad-he" style="background-image: url({{ url }})">
+      <div class="container">
+         <h1>{{ ad.title }}</h1>
+         <p>{{ ad.introduction }}</p>
+         <p class="h2">{{ ad.rooms }} chambres pour <strong>{{ ad.price }}</strong>&euro; / nuit !</p>
+         {% if app.user and app.user != ad.author %}
+            <a href="{{ path('book_create', {'slug': ad.slug}) }}" class="btn btn-primary">Je réserve</a>
+         {% endif %}
+         {% if app.user and app.user == ad.author %}
+            <a href="{{ path('ad_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
+            <a onclick='return confirm("Voulez-vous vraiment supprimer cette annonce : {{ad.title}}")' href="{{ path('ad_remove', {'slug': ad.slug}) }}" class="btn btn-danger">Supprimer l'annonce</a>
+         {% endif %}
+         <span class="rating">
+            {% include 'partials/rating.html.twig' with {'rating': ad.ratings} %}
+            <strong>({{ ad.comments | length }} avis)</strong>
+         </span>
+      </div>
+   </header>
+   {# Start Content#}
+   <main class="my-4">
+      <div class="container">
+         <div class="row">
+            {% set a = ad.author %}
+            <div class="col-8">
+               <p class="content">{{ ad.content | raw }}</p>
+            </div>
+            <div class="col-4">
+               <a href="{{ path('user', {'slug': a.slug }) }}">
+                  <img class="float-left mr-4 avatar" src="{{ a.picture }}" alt="Avatar de {{ a.fullName }}">
+               </a>
+               <a href="{{ path('user', {'slug': a.slug}) }}"><h5>{{ a.getFullName }}</h5></a>
+               <span class="badge badge-primary mb-3"><strong>{{ a.ads | length }}</strong> annonces</span>
+               <div class="clearfix"></div>
+               <p>{{ a.description | raw }}</p>
+            </div>
+            <div class="col-8">
+               <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                  <ol class="carousel-indicators">
+                     {% for image in ad.images %}
+                        <li data-targer="#carouselExampleIndicators" data-slide-to="{{ loop.index0 }}" {% if loop.first %} class="active" {% endif %}></li>
+                     {% endfor %}
+                  </ol>
+                  <div class="carousel-inner">
+                     {% for image in ad.images %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                           <img class="d-block w-100" src="{{ image.url }}" alt="First slide">
+                           <div class="carousel-caption d-none d-md-block">
+                              <h5>{{ ad.title }}</h5>
+                              <p>{{ image.caption }}</p>
+                           </div>
+                        </div>
+                     {% endfor %}
+                  </div>
+                  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                     <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                     <span class="sr-only">Next</span>
+                  </a>
+               </div>
+            </div>
+         </div>
+         <hr class="mb-4 mt-4">
+         {# Block Comments #}
+         {% if ad.comments | length > 0 %}
+            <h3>Merci pour vos commentaires</h3>
+            {% for comment in ad.comments %}
+               <div class="bg-light py-3 px-3 rounded mb-3">
+                  <div class="row">
+                     <div class="col-sm-12 col-md-1">
+                        <img src="{{ comment.author.picture }}" alt="" class="avatar">
+                     </div>
+                     <div class="col-sm-12 col-md-11">
+                        Monsieur <strong>{{ comment.author.fullName }}</strong> nous a dit : 
+                        <blockquote class="mt-2">{{ comment.comment }}</blockquote>
+                        <span class="rating">
+                           {% include 'partials/rating.html.twig' with {'rating': comment.rating} %}
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            {% endfor %}
+         {% else %}
+            <div class="alert alert-warning">
+               Cette annonce ne possède pas encore des commentaires :/
+            </div>
+         {% endif %}
+      </div>
+   </main>
+{% endblock %}

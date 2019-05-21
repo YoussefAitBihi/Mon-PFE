@@ -1,0 +1,103 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+   Modification de l'annonce n°{{ad.id}}
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+   <div class="container-fluid">
+      <h3 class="text-center my-4">Veuillez modifier l'annonce : <em>{{ad.title}}</em></h3>
+      {{ form_start(form) }}
+         <div class="row">
+            <div class="col-lg-6 mb-3">
+               <div class="card">
+                  <div class="card-header bg-light">
+                     <h5 class="card-title">Corrigez l'annonce</h5>
+                  </div>
+                  <div class="card-body">
+                     {{ form_widget(form) }}
+                     <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mx-2"></i>
+                        Enregistrer les modifications
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-6">
+               <div class="card">
+                  <div class="card-header bg-light">
+                     <h5 class="card-title">Les réservations</h5>
+                  </div>
+                  <div class="body">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <td>Voyageur</td>
+                              <td>La date de réservation</td>
+                              <td>Le commentaire</td>
+                              <td>Action</td>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {% for booking in ad.bookings %}
+                              <tr>
+                                 <td>{{booking.Booker.fullName}}</td>
+                                 <td>{{booking.startDate | date('d/m/Y H:i')}}</td>
+                                 <td>{{booking.comment}}</td>
+                                 <td>
+                                    <button type="button" class="btn btn-primary">
+                                       <i class="fas fa-pen" title="Modifier !"></i>
+                                    </button>
+                                 </td>
+                              </tr>
+                           {% endfor %}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      {{ form_end(form) }}
+   </div>
+{% endblock %}
+
+{% block _ad_images_widget %}
+   {{ form_widget(form) }}
+{% endblock %}
+
+{% block _ad_images_entry_row %}
+   <div id="box-{{id}}">
+      {{ form_widget(form) }}
+   </div>
+{% endblock %}
+
+{% block _ad_images_entry_widget %}
+   <div class="row align-items-center">
+      <div class="col-4">
+         {% if value %}
+            <img src="{{value.url}}" alt="" class="img-fluid">
+         {% endif %}
+      </div>
+      <div class="col-6">
+         {{ form_row(form.caption) }}
+      </div>
+      <div class="col">
+         <button type="button" class="btn btn-danger" data-action="delete" data-id="#box-{{id}}">
+            <i class="fas fa-trash"></i>
+         </button>
+      </div>
+   </div>
+{% endblock %}
+
+{% block javascripts %}
+   <script>
+      $(document).ready(function(){
+         $('[data-action="delete"]').on('click', function() {
+            const id = this.dataset.id;
+            $(id).remove();
+         });
+      });
+   </script>
+{% endblock %}

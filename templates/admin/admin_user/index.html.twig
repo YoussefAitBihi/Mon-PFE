@@ -1,0 +1,105 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+   Administration des utilisateurs
+{% endblock %}
+
+{% block body %}    
+   <div class="container-fluid">
+      <h1 class="my-4">Gestion des utilisateurs</h1>
+      {% if users and users is not null %}
+         <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+               <thead>
+                  <tr>
+                     <th>ID</th>
+                     <th>Nom complet</th>
+                     <th>Email</th>
+                     <th>Description</th>
+                     <th>Annonces</th>
+                     <th>Réservations</th>
+                     <th>Commentaires</th>
+                     <th>Action</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {% for user in users %}
+                     <tr>
+                        <td>{{user.id}}</td>
+                        <td>{{user.fullName}}</td>
+                        <td>{{user.email}}</td>
+                        <td>
+                           <span class="description">{{user.description | raw}}</span>
+                           <span class="more-point">...</span>
+                           <span class="more-text" style="display: none"></span>
+                           <button class="btn btn-sm btn-primary js-more-button">En savoir plus !</button>
+                        </td>
+                        <td>
+                           <a href="{{ path('user_show_ads', {'slug': user.slug}) }}" class="">
+                              <span class="badge badge-info">
+                                 <strong>{{user.ads | length }}</strong> 
+                                 annonce{% if user.ads | length > 1 %}s{% endif %}
+                              </span>
+                           </a>
+                        </td>
+                        <td>
+                           <span class="badge badge-info">
+                              <strong>{{user.bookings | length}}</strong> 
+                              réservation{% if user.bookings | length > 1 %}s{% endif %}
+                           </span>
+                        </td>
+                        <td>
+                           <span class="badge badge-info">
+                              <strong>{{user.comments | length}}</strong> 
+                              commentaire{% if user.comments | length > 1 %}s{% endif %}
+                           </span>
+                        </td>
+                        <td>
+                           <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary">
+                              <i class="fas fa-pen"></i>
+                           </a>
+                           <a href="{{ path("admin_user_remove", {'id': user.id}) }}" class="btn btn-danger">
+                              <i class="fas fa-trash"></i>
+                           </a>
+                        </td>
+                     </tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      {% endif %}
+      {# System pagination #}
+      {% include 'admin/partials/pagination.html.twig' with {'route': 'admin_users_index'} %}
+   </div>
+{% endblock %}
+
+{% block javascripts %}
+   <script>
+      $(function() {
+         for (var i = 0; i < $('.description').length; i++) {
+            const limit     = 100;
+            let   text      = $('.description').eq(i).text(),
+                  firstText = text.substr(0, limit),
+                  lastText  = text.substr(limit, text.length);
+
+            $('.description').eq(i).text(firstText);
+            $('.more-text').eq(i).append(lastText);
+         }
+
+         $('.js-more-button').on('click', function() {
+
+            if ($(this).text() !== 'Moins') {
+
+               $(this).parent().find('.more-text').show();
+               $(this).text('Moins');
+               $(this).parent().find('.more-point').hide();
+
+            } else {
+               $(this).parent().find('.more-text').hide();
+               $(this).text('En savoir plus !');
+               $(this).parent().find('.more-point').show();
+            }
+         });
+      });
+   </script>
+{% endblock %}
